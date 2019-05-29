@@ -1,3 +1,6 @@
+from app.functions import *
+
+
 class Partsper:
     """partsper -> int; the number of parts this sequence produces in one cycle"""
     partsper = 1
@@ -13,6 +16,12 @@ class Partsper:
                 self.partsper = int(new)
                 self.app.setLabel('partsper', self.partsper)
                 self.app.setEntry('new_partsper', '')
+                pct = int(self.app.getLabel('PCT'))
+                sequence_time = self.partsper * pct
+                time_label = '{} Cycle Time\n{} PCT * {} Parts'.format(countdown_format(sequence_time),
+                                                                       countdown_format(pct),
+                                                                       self.partsper)
+                self.app.setLabel('sequence_time', time_label)
         elif btn == 'Back_partsper':
             self.app.setEntry('new_partsper', new[0:-1])
         else:

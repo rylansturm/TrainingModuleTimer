@@ -1,3 +1,6 @@
+from app.functions import *
+
+
 class PCT:
     """pct -> int; number of seconds planned for cycling each part through flow"""
     planned_cycle_time = 60
@@ -13,6 +16,12 @@ class PCT:
                 self.planned_cycle_time = int(new)
                 self.app.setLabel('PCT', self.planned_cycle_time)
                 self.app.setEntry('new_pct', '')
+                partsper = int(self.app.getLabel('partsper'))
+                sequence_time = self.planned_cycle_time * partsper
+                time_label = '{} Cycle Time\n{} PCT * {} Parts'.format(countdown_format(sequence_time),
+                                                                       countdown_format(self.planned_cycle_time),
+                                                                       partsper)
+                self.app.setLabel('sequence_time', time_label)
         elif btn == 'Back_PCT':
             self.app.setEntry('new_pct', new[0:-1])
         else:

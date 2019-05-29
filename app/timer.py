@@ -47,10 +47,6 @@ class Timer:
             self.app.setTabbedFrameSelectedTab('Tabs', 'Run')
             self.app.setButton('Start', 'Reset')
             self.app.setButtonBg('Start', 'red')
-            time_label = '{} Cycle Time\n{} PCT * {} Parts'.format(countdown_format(self.sequence_time()),
-                                                                   countdown_format(int(self.app.getLabel('PCT'))),
-                                                                   self.app.getLabel('partsper'))
-            self.app.setLabel('sequence_time', time_label)
 
     def cycle(self):
         """ called when the user presses the pedal each cycle """
