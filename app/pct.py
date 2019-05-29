@@ -30,7 +30,7 @@ class PCT:
     @staticmethod
     def validate(new):
         """ makes sure invalid numbers can't be set to pct """
-        if 0 < int(new) < 3600:
+        if 0 < int(new) <= 3600:
             return new
         else:
             return new[0:-1]
