@@ -117,6 +117,12 @@ def layout(app, andon, pct, partsper, timer):
                         app.getLabelWidget(label).config(font=font_glance)
                         app.setLabelRelief(label, 'ridge')
                         column += 1
+                    pct = int(app.getLabel('PCT'))
+                    partsper = int(app.getLabel('partsper'))
+                    time_label = '{} Cycle Time\n{} PCT * {} Parts'.format(countdown_format(pct * partsper),
+                                                                           countdown_format(pct),
+                                                                           partsper)
+                    app.setLabel('sequence_time', time_label)
 
                 column = 0
                 for label in ['early', 'late', 'on_target']:
