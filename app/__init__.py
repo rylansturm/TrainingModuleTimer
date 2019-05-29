@@ -10,7 +10,7 @@ def create_app():
     andon_class = andon.Andon(app)
     pct_class = pct.PCT(app)
     partsper_class = partsper.Partsper(app)
-    timer_class = timer.Timer(app)
+    timer_class = timer.Timer(app, andon_class)
     return {'app': app,
             'andon': andon_class,
             'pct': pct_class,

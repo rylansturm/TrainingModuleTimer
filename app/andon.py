@@ -24,3 +24,7 @@ class Andon:
             return '{} + {}'.format(responded, andons - responded)
         else:
             return andons
+
+    def reset(self):
+        self.andons, self.responded = 0, 0
+        self.andon('Respond')

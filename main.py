@@ -20,11 +20,11 @@ class Timer:
 
     def count(self):
         """ runs repeatedly while gui is running """
+
         timer = self.timer
         cycle = (now() - timer.mark).total_seconds()
         timer.tcycle = int(timer.sequence_time() - (int(cycle) if timer.started else 0))
         timer.update()
-        self.app.setLabel('tCycle', countdown_format(timer.tcycle))
 
 
 if __name__ == '__main__':

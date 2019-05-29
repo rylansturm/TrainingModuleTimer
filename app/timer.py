@@ -10,51 +10,51 @@ class Timer:
     tcycle = 0
     past_15 = []
 
-    def __init__(self, app):
+    def __init__(self, app, andon):
         self.app = app
+        self.andon = andon
+
+    def reset_all_variables(self):
+        """ upon reset, all necessary variables and labels are reset to original """
+        self.started = False
+        self.cycles = 0
+        self.distribution = {'early': 0, 'late': 0, 'on_target': 0}
+        self.past_15 = []
+        self.andon.reset()
+
+        for label in ['early', 'late', 'on_target']:
+            self.app.setLabel(label, label)
+
+        self.app.changeOptionBox('past_10', ['previous cycles'])
+
+    def update(self):
+        """ all constantly updating gui labels should be updated from here, to keep the main count function clean """
+        self.screen_color()
+        self.ahead()
+        self.app.setLabel('tCycle', countdown_format(self.tcycle))
 
     def start(self):
         """ the start button calls this function """
         if self.started:
-            self.started = False
             self.app.setButton('Start', 'Start')
             self.app.setButtonBg('Start', 'light grey')
-            self.cycles = 0
-            self.distribution = {'early': 0, 'late': 0, 'on_target': 0}
+            self.reset_all_variables()
 
         else:
             self.started = True
             self.mark = now()
             self.start_time = now()
             self.app.setTabbedFrameSelectedTab('Tabs', 'Run')
-            self.app.setButton('Start', 'Stop')
-            self.app.setButtonBg('Start', 'blue')
+            self.app.setButton('Start', 'Reset')
+            self.app.setButtonBg('Start', 'red')
             time_label = '{} Cycle Time\n{} PCT * {} Parts'.format(countdown_format(self.sequence_time()),
                                                                    countdown_format(int(self.app.getLabel('PCT'))),
                                                                    self.app.getLabel('partsper'))
             self.app.setLabel('sequence_time', time_label)
 
-    def sequence_time(self):
-        """ returns PCT * Partsper, the expected sequence cycle time """
-        return int(self.app.getLabel('PCT')) * int(self.app.getLabel('partsper'))
-
-    def window(self):
-        """ returns the acceptable window for "on time" delivery """
-        return int(self.app.getLabel('partsper'))  # currently +/- 1sec/part
-
-    def get_current(self):
-        """ returns whether the current cycle is early, on_target, or late (as str) """
-        current_time = self.tcycle
-        if current_time > self.window():
-            return 'early'
-        elif -self.window() <= current_time <= self.window():
-            return 'on_target'
-        else:
-            return 'late'
-
     def cycle(self):
         """ called when the user presses the pedal each cycle """
-        if self.started:
+        if self.started and self.tcycle < self.sequence_time() - 2:
             current = self.get_current()
             cycle_time = self.sequence_time() - self.tcycle
             self.distribution[current] += 1
@@ -82,7 +82,21 @@ class Timer:
         ahead *= -1 if ahead < 0 else 1
         self.app.setLabel('ahead', label.format(ahead, self.cycles, expected))
 
-    def update(self):
-        """ all constantly updating gui labels should be updated from here, to keep the main count function clean """
-        self.screen_color()
-        self.ahead()
+    def sequence_time(self):
+        """ returns PCT * Partsper, the expected sequence cycle time """
+        return int(self.app.getLabel('PCT')) * int(self.app.getLabel('partsper'))
+
+    def window(self):
+        """ returns the acceptable window for "on time" delivery """
+        return int(self.app.getLabel('partsper'))  # currently +/- 1sec/part
+
+    def get_current(self):
+        """ returns whether the current cycle is early, on_target, or late (as str) """
+        current_time = self.tcycle
+        if current_time > self.window():
+            return 'early'
+        elif -self.window() <= current_time <= self.window():
+            return 'on_target'
+        else:
+            return 'late'
+
