@@ -54,7 +54,7 @@ class Timer:
 
     def cycle(self):
         """ called when the user presses the pedal each cycle """
-        if self.started and self.tcycle < self.sequence_time() - 2:
+        if self.started and (now() - self.mark).total_seconds() >= 2:
             current = self.get_current()
             cycle_time = self.sequence_time() - self.tcycle
             self.distribution[current] += 1
